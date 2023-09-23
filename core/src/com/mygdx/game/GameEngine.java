@@ -21,6 +21,14 @@ public class GameEngine {
     public int getScore() {
         return score;
     }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
     // endregion
 
     private final Vector3 touchPos = new Vector3();
@@ -30,8 +38,17 @@ public class GameEngine {
     private final int widthEndOffSet = 125;
     private long lastDropTime = 1000;
     private int score = 0;
+    private boolean pause = false;
 
-    public void lifeCycleKeys(OrthographicCamera camera, Rectangle bucket, Sound dropSound) throws RuntimeException {
+    public void lifeCycleKeysWhenPause() {
+        if (Gdx.input.isTouched()) {
+            pause = false;
+        }
+    }
+
+    public void lifeCycleKeysWhenNotPause(OrthographicCamera camera, Rectangle bucket, Sound dropSound) throws RuntimeException {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) pause = true;
+
         // when user touch
         if (Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);

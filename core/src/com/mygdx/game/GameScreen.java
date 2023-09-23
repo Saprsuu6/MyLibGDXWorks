@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class GameScreen implements Screen {
@@ -84,21 +85,39 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.3F, 0.6F, 0.5F, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if (gameEngine.isPause()) {
+            game.getBatch().begin();
+            if ("ru".equals(Locale.getDefault().getLanguage())) {
+                Localisation.getInstance().getFont(game.getRuLocale()).draw(game.getBatch(), "Нажмите чтобы продолжить", Gdx.graphics.getWidth() / 2F, Gdx.graphics.getHeight() / 2F);
+            }
+            if ("en".equals(Locale.getDefault().getLanguage())) {
+                Localisation.getInstance().getFont(game.getEnLocale()).draw(game.getBatch(), "Tap to Continue", Gdx.graphics.getWidth() / 2F, Gdx.graphics.getHeight() / 2F);
+            }
+            game.getBatch().end();
+            gameEngine.lifeCycleKeysWhenPause();
+        } else {
+            Gdx.gl.glClearColor(0.3F, 0.6F, 0.5F, 0);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.getCamera().update();
+            game.getCamera().update();
 
-        game.getBatch().setProjectionMatrix(game.getCamera().combined);
-        game.getBatch().begin();
-        renderObjects();
-        game.getBatch().end();
+            game.getBatch().setProjectionMatrix(game.getCamera().combined);
+            game.getBatch().begin();
+            if ("ru".equals(Locale.getDefault().getLanguage())) {
+                Localisation.getInstance().getFont(game.getRuLocale()).draw(game.getBatch(), "Нажмите ESC чтобы остановить. Ну или играйте дальше:/", (Gdx.graphics.getWidth() / 2F) + 130, Gdx.graphics.getHeight() - 20);
+            }
+            if ("en".equals(Locale.getDefault().getLanguage())) {
+                Localisation.getInstance().getFont(game.getEnLocale()).draw(game.getBatch(), "Tap to ESC to pause or continue to play:/", (Gdx.graphics.getWidth() / 2F) + 130, Gdx.graphics.getHeight() - 20);
+            }
+            renderObjects();
+            game.getBatch().end();
 
-        try {
-            gameEngine.lifeCycleKeys(game.getCamera(), bucket, dropSound);
-        } catch (RuntimeException e) {
-            game.setScreen(new MainMenuScreen(game));
-            dispose();
+            try {
+                gameEngine.lifeCycleKeysWhenNotPause(game.getCamera(), bucket, dropSound);
+            } catch (RuntimeException e) {
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
+            }
         }
     }
 
@@ -109,7 +128,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        gameEngine.setPause(true);
     }
 
     @Override
