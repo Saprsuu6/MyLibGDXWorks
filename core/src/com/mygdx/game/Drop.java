@@ -51,7 +51,11 @@ public class Drop extends Game {
 
         batch = new SpriteBatch();
         text = new BitmapFont();
-        //this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new MainMenuScreen(this));
+
+        // some new changes
     }
 
     @Override
