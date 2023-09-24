@@ -53,6 +53,11 @@ public class Drop extends Game {
         text = new BitmapFont();
         this.setScreen(new MainMenuScreen(this));
         // this is new
+        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new MainMenuScreen(this));
+
+        // some new changes
     }
 
     @Override
